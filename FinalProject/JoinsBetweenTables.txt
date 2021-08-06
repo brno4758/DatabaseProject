@@ -1,0 +1,34 @@
+Select Staff name, their information, and their current salary. Order by salary descending
+
+select CONCAT(Staff.Staff_first, ' ',Staff.Staff_last) as name, Staff.Staff_phone, Staff.Staff_email, Staff.Staff_position, Salaries.Salaries_salary
+from Staff, Salaries
+Where Staff.Staff_id=Salaries.Staff_id
+order by Salaries_salary DESC;
+
+---------------------------------------------------------------------
+
+Select all sections course name, start time, end time, and teacher teaching that section
+
+Select Courses.Courses_name, Sections.Sections_startTime as start, Sections.Sections_endTime as end, CONCAT(Staff.Staff_first, ' ', Staff.Staff_last) as Teacher
+from Sections, Courses, Staff
+Where Sections.Courses_id = Courses.Courses_id and Sections.Staff_id = Staff.Staff_id;
+
+---------------------------------------------------------------------
+
+Select all students name, and their dues if they have any including the due date. Include students without any dues in the final result.
+
+select CONCAT(Students.Students_first, ' ', Students.Students_last) as name, Dues.Dues_amount, Dues.Due_date
+from Students
+LEFT JOIN Dues
+ON Students.Students_id=Dues.Students_id;
+
+---------------------------------------------------------------------
+
+Select all sections course name, start date, end date, the building, the room, and the teacher teaching the course
+
+select Courses.Courses_name, Sections.Sections_startTime, Sections.Sections_endTime,Buildings.Buildings_name, Sections_roomNumber, CONCAT(Staff.Staff_first,' ', Staff.Staff_last) as Teacher
+from Sections, Courses, Buildings, Staff
+where Courses.Courses_id = Sections.Courses_id AND Sections.Buildings_id=Buildings.Buildings_id AND Sections.Staff_id=Staff.Staff_id;
+
+---------------------------------------------------------------------
+

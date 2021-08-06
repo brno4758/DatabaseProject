@@ -1,0 +1,17 @@
+Select the sum of credits being taught by staff members that are teaching courses
+
+select CONCAT(Staff.Staff_first,' ',Staff.Staff_last) as name, SUM(Courses.Courses_credits) as TotalCreditsTaught
+from Sections, Staff, Courses 
+where Sections.Staff_id=Staff.Staff_id and Sections.Courses_id = Courses.Courses_id
+group by name;
+
+-------------------------------------------------------------------------------------
+
+Select the sum of credits being taken by students
+
+select CONCAT(Students.Students_first, ' ', Students.Students_last) as name, SUM(Courses.Courses_credits) totalCredits
+from Students, Courses, Enrolled
+Where Enrolled.Students_id = Students.Students_id and Courses.Courses_id = Enrolled.Courses_id
+group by name;
+
+(Note: This is already done by our `updaet_credits` trigger)

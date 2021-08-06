@@ -1,0 +1,4 @@
+Insert into Sections(Sections_number, Sections_startTime, Sections_endTIme, Sections_days, Buildings_id, Sections_roomNumber, Courses_id, Staff_id) VALUES
+(1,'10:00:00','12:00:00',135,2,100,4,5)
+
+Insert into Enrolled (Students_id, Sections_number, Courses_id) values(1,3,1);

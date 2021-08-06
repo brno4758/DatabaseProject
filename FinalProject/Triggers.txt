@@ -1,0 +1,70 @@
+DROP TRIGGER IF EXISTS `verify_section`;
+
+DELIMITER //
+CREATE TRIGGER `verify_section`
+before insert on Enrolled
+for each row
+BEGIN
+	IF NEW.Sections_number NOT IN(SELECT Sections_number from Sections Where Sections.Courses_id = NEW.Courses_id)
+    THEN
+    	SIGNAL SQLSTATE'45000'
+        SET MESSAGE_TEXT = 'Section number does not exist';
+    END IF;
+End;//
+DELIMITER ; 
+
+//Ensure the Section Number exists for that class
+-------------------------------------------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS `verify_time_conflicts`;
+
+DELIMITER //
+CREATE TRIGGER `verify_time_conflicts`
+before insert on Sections
+for each row
+BEGIN
+	IF EXISTS(Select True from Sections where Sections_roomNumber = NEW.Sections_roomNumber AND Sections_days = NEW.Sections_days AND Buildings_id = NEW.Buildings_id AND NEW.Sections_startTime BETWEEN Sections_startTime AND Sections_endTIme)
+    	THEN
+    	SIGNAL SQLSTATE'45000'
+        SET MESSAGE_TEXT = 'Section schedule time conflicts with another class';
+    END IF;
+End;//
+DELIMITER ;
+
+//Ensure that a new section doesnt conflict with a pre-existing section
+-------------------------------------------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS `dues_date_check`;
+
+DELIMITER //
+CREATE TRIGGER `dues_date_check`
+before insert on Enrolled
+for each row
+BEGIN
+	DECLARE dueDate DATE;
+	IF EXISTS (Select 1 from Dues where Students_id = New.Students_id)
+	THEN
+    	IF (select Due_date from Dues where Students_id = New.Students_id) <= CURRENT_DATE THEN
+			SIGNAL SQLSTATE'45000'
+			SET MESSAGE_TEXT = 'Student has overdue bills';
+        END IF;
+	END IF;
+End;//
+
+//Ensure that the student doesnt have overdue bills on the day he/she is trying to reigster
+-------------------------------------------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS `update_credits`;
+
+DELIMITER //
+CREATE TRIGGER `update_credits`
+after insert on Enrolled
+for each ROW
+BEGIN
+	UPDATE Students
+    SET Students.Students_creditsEarned = (Students.Students_creditsEarned + (select Courses.Courses_credits from Courses where Courses.Courses_id = New.Courses_id))
+    WHERE Students.Students_id = New.Students_id;
+END;//
+DELIMITER ;
+
+//Update the students credits earned after enrolling in a new class

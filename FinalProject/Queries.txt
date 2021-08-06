@@ -1,0 +1,32 @@
+Select all class sections that occur MWF (135)
+
+SELECT *
+FROM Courses,Sections
+Where Courses.Courses_id = Sections.Courses_id and Sections.Sections_days='135';
+
+---------------------------------------------------------------------
+
+Select the class worth the most credits
+
+select Courses.Courses_name, Courses.Courses_credits
+from Courses
+where Courses.Courses_credits = (select max(Courses_credits) from Courses);
+
+---------------------------------------------------------------------
+
+Select all courses available, including name and credits value, orded alphabetically ascending
+
+select Courses_name,Courses_credits
+from Courses
+order by Courses_name ASC;
+
+---------------------------------------------------------------------
+
+Select all staff, including name and position and phone and email, order alphabetically ascending by job title
+
+select CONCAT(Staff.Staff_first, ' ', Staff.Staff_last) as name, Staff.Staff_position as position, Staff.Staff_phone as phone, Staff.Staff_email as email
+FROM Staff
+ORDER BY position ASC;
+
+---------------------------------------------------------------------
+

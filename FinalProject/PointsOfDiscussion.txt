@@ -1,0 +1,9 @@
+Thought about 'positions' relation, but didnt make sense because not all members of one position would be paid the same.
+
+Could have 'Dues' table updated with every insert into 'Enrolled' and then manually remove the balance, this would be better for a web interface though that can activate when the Dues are paid.
+
+Delete anomally on buildings, we need to reassign sections before we delete a building or we lose the sections
+
+Huge issue with days attribute of Sections, assumes only MWF and TTh sections exist
+
+

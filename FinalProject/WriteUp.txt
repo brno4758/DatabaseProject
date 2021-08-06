@@ -1,0 +1,43 @@
+1.] Do you understand the motivation for the database project and how someone would use it?
+
+Yes, as I try to figure out the scheme of these relations more, I realize not only the complexity behind it but also the utility as well. I imagine something similar (although much better and implemented by much more qualified people) is implemented by CU to keep track of the staff, students, rosters, courses, etc. For instance, a suedo code query pertaining to me could be "Before insert on Roster check 'Brian Noble' has no outstanding debts" or something like "Before insert in Courses check new course doesnt conflict with other courses start time and room/building"
+
+2.] It is clear how the database project will involve multiple relations and/or data sources?
+
+Yes, some of the data sources could be current and incoming students, current and incoming staff, rosters for courses, dues owed by students, bulildings, rooms, etc.
+
+3.] Are possible platforms used for creation and querying or presenting the data specified and are those platform choices justified?
+
+The platform is not specificed, but I think the obvious choice is a website. However, to be honest I don't really want to implement a website and if I did it would be an old website I made redone for this project. So rather than just use old work I will use the Applied MySQL DB, and either use it directly through phpMyAdmin or just connect it to a jupyter notebook using SQLAlchemy
+
+
+4.] Are the learning outcomes clearly stated?
+
+Now that I am setting up the actual diagrams and schemas, the learning outcome has become more clear. I want to ensure that all relations are in 3NF or BCNF, which requires me to understand these normal forms and be able to decompose into them if necessary. Also, I need to be able to avoid update and deletion anomalies, and decide how to handle these (i.e, cascading delete/set to null). Also, with these normal forms I want to be able to avoid redundancy as much as possible. In comparison to the initial ideation, the learning outcomes have become more clear. 
+
+
+5.] Are the ways that the learning outcomes will be met cleary stated?
+
+This one hasn't changed since part 1 of the project, I imagine the way these learning outcomes will be met is just by doing them.
+
+
+
+Relations:
+    Staff(name, staffID)
+    Students(name, studentID)
+    Courses(courseID, courseName, department, startTime, duration, room#, buildingName/buildingID, days) <------- either building name or building ID, not both
+    Teaches(staffID, courseID)
+    Owes(studentID, amount, dueBy)
+    Buildings(buildingID, buildingName)  <------ Might make buildingName key, doesn't make sense to have two buildings named the same, but if we keep buildingID we can sve space in the Courses relation by having an integer instead of a string
+    Salaries(staffID, salary)  <------ Might include a position attribute either here or in Staff relation
+    Enrolled(courseID, studentID, section)    <------ Need to check this for update/deletion anomalies, could probably be solved with F.K. cascades, want this to be sort of a roster for each class
+    
+
+Suedo Triggers:
+    Before insert into Courses, if on the same day(s) as other course, make sure times to do not conflict
+    Before insert into Enrolled, make sure student is not in another section and does not have an outstanding balance
+    If a student leaves the school, remove him/her from all enrolled courses (delete)
+    If a teacher leaves their job, remove him/her from all Teaches tuples (set staffID to null)
+    
+    
+To re-iterate some of what I said above, I won't be setting up a website for this. I will instead just use the Applied MYSQL DB, and use the database that was already set up for one of the past labs. I might link that DB to a jupyter notebook when it comes to showing the functionality of the DB, just so I can have all the cells set up in advance. 

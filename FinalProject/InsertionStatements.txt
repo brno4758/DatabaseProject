@@ -1,0 +1,124 @@
+Insert into 
+	Buildings(Buildings.Buildings_id, Buildings.Buildings_name) 
+Values
+(NULL, 'Gamow'),
+(NULL, 'Imig'),
+(NULL, 'Hale'),
+(NULL, 'JILA'),
+(NULL, 'ATLAS'),
+(NULL, 'FLEMING');
+
+
+
+Insert into 
+	Students(Students.Students_id,Students.Students_first,Students.Students_last,Students.Students_address,Students.Students_phone,Students.Students_email, Students.Students_creditsEarned)
+VALUES
+(NULL, 'Brian', 'Noble', '123 Folsom St', '1234568', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Jim', 'John', '456 Apple Dr', '2222222', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Bill', 'Black', '9257 Roosevelt Rd', '8351618', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Adam', 'West', '8135 Dogwood St', '4689620', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Dirk', 'Grunwald', '7670 Honey Creek Street', '9955106', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Steven', 'Smith', '463 W. Lyme Ave', '6936432', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'James', 'White', '103 Edgewater Ave', '2243086', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Ryan', 'Nobles', '339 Santa Clara Ave', '6330778', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0),
+(NULL, 'Steve', 'Adams', '8379 Miller Avenue ', '8435723', CONCAT(Students.Students_first,Students.Students_last,'@colorado.edu'),0);
+
+
+
+INSERT INTO 
+	Staff(Staff_id,Staff_first,Staff_last,Staff_position,Staff_phone,Staff_address,Staff_email)
+VALUES
+(NULL, 'Erik', 'Ilyes', 'Professor', '8675309', '2 Elm St', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu')),
+(NULL, 'Nicoline', 'Ethelbert', 'Professor', '7924501', '8191 Pumpkin Hill St', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu')),
+(NULL, 'Kostis', 'Albin', 'Janitor', '3693962', '8497 West Summerhouse Drive ', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu')),
+(NULL, 'Rosanna', 'Seija', 'TA', '9005652', '9770 Garfield Ave', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu')),
+(NULL, 'Dominik ', 'Millicent', 'IT', '6421260', '73 Albany Ave', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu')),
+(NULL, 'Rizwana', 'Staas', 'Assistant Professor', '6098819', '693 E. Mayfield Circle ', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu')),
+(NULL, 'Inesa', 'Cecilia', 'Dean', '5336380', '59 Newport Court ', CONCAT(Staff.Staff_first,Staff.Staff_last,'@coloradostaff.edu'));
+
+
+
+INSERT INTO
+	Departments(Departments_id, Departments_name)
+VALUES
+(NULL, 'Math'),
+(NULL, 'Chemistry'),
+(NULL, 'English'),
+(NULL, 'Computer Science'),
+(NULL, 'Engineering'),
+(NULL, 'Philosophy'),
+(NULL, 'Art');
+
+
+
+INSERT INTO
+	Courses(Courses_id, Courses_name, Departments_id, Courses_credits)
+VALUES
+(NULL, 'Intro to Computer Science', (Select Departments_id FROM Departments WHERE Departments.Departments_name = 'COMPUTER SCIENCE'), 3),
+(NULL, 'Intro to Drawing', (Select Departments_id FROM Departments WHERE Departments.Departments_name = 'ART'), 3),
+(NULL, 'Intro to Painting', (Select Departments_id FROM Departments WHERE Departments.Departments_name = 'ART'), 3),
+(NULL, 'Calculus', (Select Departments_id FROM Departments WHERE Departments.Departments_name = 'MATH'), 4),
+(NULL, 'Calculus 2', (Select Departments_id FROM Departments WHERE Departments.Departments_name = 'MATH'), 5),
+(NULL, 'Intro to Philosophy', (Select Departments_id FROM Departments WHERE Departments.Departments_name = 'PHILOSOPHY'), 3);
+
+
+
+INSERT INTO 
+	Sections(Sections_number, Sections_startTime, Sections_endTime, Sections_days, Buildings_id, Sections_roomNumber, Courses_id, Staff_id)
+VALUES
+(001, '005:30:00', '006:30:00', '135', 1, 200, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Computer Science'), 1),
+(002, '005:30:00', '007:00:00', '24', 1, 200, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Computer Science'), 1),
+(001, '012:30:00', '013:30:00', '135', 3, 500, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Drawing'), 2),
+(002, '014:30:00', '015:30:00', '24', 3, 500, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Drawing'), 2),
+(001, '008:00:00', '008:45:00', '135', 5, 105, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Calculus 2'), 4),
+(002, '008:00:00', '009:00:00', '24', 5, 105, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Calculus 2'), 4),
+(001, '009:00:00', '012:00:00', '135', 2, 100, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Calculus'), 5),
+(002, '009:00:00', '012:00:00', '24', 2, 100, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Calculus'), 5),
+(001, '013:00:00', '014:00:00', '135', 4, 600, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Painting'), 3),
+(002, '013:00:00', '015:00:00', '24', 4, 600, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Painting'), 3),
+(001, '015:00:00', '015:00:00', '135', 6, 600, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Philosophy'), 6),
+(002, '015:00:00', '015:00:00', '24', 6, 600, (SELECT Courses_id FROM Courses WHERE Courses.Courses_name='Intro to Philosophy'), 6)
+;
+
+
+
+Insert into 
+	Enrolled (Students_id, Sections_number, Courses_id)
+VALUES
+(1,001,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(2,001,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(3,001,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(4,002,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(5,002,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(6,002,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(7,001,(Select Courses_id from Courses where Courses.Courses_name='Intro to Computer Science')),
+(8,001,(Select Courses_id from Courses where Courses.Courses_name='Calculus')),
+(2,001,(Select Courses_id from Courses where Courses.Courses_name='Calculus')),
+(3,001,(Select Courses_id from Courses where Courses.Courses_name='Calculus')),
+(4,002,(Select Courses_id from Courses where Courses.Courses_name='Calculus')),
+(1,002,(Select Courses_id from Courses where Courses.Courses_name='Intro to Philosophy')),
+(1,001,(Select Courses_id from Courses where Courses.Courses_name='Intro to Drawing')),
+(1,002,(Select Courses_id from Courses where Courses.Courses_name='Calculus')),
+(1,001,(Select Courses_id from Courses where Courses.Courses_name='Intro to Painting'))
+;
+
+
+
+Insert into
+	Dues (Dues_amount, Students_id, Due_date)
+VALUES
+(5000, 1, '2021-08-02'),
+(1240, 2, '2021-08-02'),
+(1000, 3, '2021-08-02')
+
+
+Insert into
+	Salaries(Staff_id, Salaries_salary)
+VALUES
+(1,10000),
+(2,15000),
+(3,30000),
+(4,6000),
+(5,12000),
+(6,60000),
+(7,35000);

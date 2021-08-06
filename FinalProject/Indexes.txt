@@ -1,0 +1,12 @@
+CREATE INDEX staff_id
+ON Staff (Staff_id);
+
+--------------------------------------------------------------------
+
+CREATE INDEX course_id
+ON Courses (Courses_id);
+
+--------------------------------------------------------------------
+
+CREATE INDEX buldings_id
+ON Buildings (Buildings_id);

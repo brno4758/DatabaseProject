@@ -1,0 +1,216 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema brno4758
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `brno4758` ;
+
+-- -----------------------------------------------------
+-- Schema brno4758
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `brno4758` DEFAULT CHARACTER SET utf8 ;
+USE `brno4758` ;
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Staff`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Staff` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Staff` (
+  `Staff_id` INT NOT NULL AUTO_INCREMENT,
+  `Staff_first` VARCHAR(45) NOT NULL,
+  `Staff_last` VARCHAR(45) NOT NULL,
+  `Staff_position` VARCHAR(45) NOT NULL,
+  `Staff_phone` VARCHAR(15) NOT NULL,
+  `Staff_address` VARCHAR(45) NOT NULL,
+  `Staff_email` VARCHAR(45) UNIQUE NOT NULL,
+  PRIMARY KEY (`Staff_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Students` 
+
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Students` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Students` (
+  `Students_id` INT NOT NULL AUTO_INCREMENT,
+  `Students_first` VARCHAR(45) NOT NULL,
+  `Students_last` VARCHAR(45) NOT NULL,
+  `Students_address` VARCHAR(45) NOT NULL,
+  `Students_phone` VARCHAR(15) NULL,
+  `Students_email` VARCHAR(45) NOT NULL,
+  `Students_creditsEarned` INT,
+  PRIMARY KEY (`Students_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Departments`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Departments` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Departments` (
+  `Departments_id` INT NOT NULL AUTO_INCREMENT,
+  `Departments_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Departments_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Courses`  //Course_id here doesnt make sense because the course_name and depatment_id will be a unique combination
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Courses` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Courses` (
+  `Courses_id` INT NOT NULL AUTO_INCREMENT,
+  `Courses_name` VARCHAR(45) NOT NULL,
+  `Departments_id` INT,
+  `Courses_credits` INT
+  PRIMARY KEY (`Courses_id`),
+  INDEX `fk_Courses_Departments1_idx` (`Departments_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Courses_Departments1`
+    FOREIGN KEY (`Departments_id`)
+    REFERENCES `brno4758`.`Departments` (`Departments_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Buildings`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Buildings` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Buildings` (
+  `Buildings_id` INT NOT NULL AUTO_INCREMENT,
+  `Buildings_name` VARCHAR(45) UNIQUE NOT NULL,
+  PRIMARY KEY (`Buildings_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Sections` !******Make sure a class doesnt start in the same room during another class (DONE)
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Sections` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Sections` (
+  `Sections_number` INT NOT NULL,
+  `Sections_startTime` TIME NOT NULL,
+  `Sections_endTime` INT NOT NULL,
+  `Sections_days` VARCHAR(7) NOT NULL,
+  `Buildings_id` INT NOT NULL,
+  `Sections_roomNumber` INT NOT NULL,
+  `Courses_id` INT NOT NULL,
+  `Staff_id` INT
+  PRIMARY KEY (`Sections_days`, `Buildings_id`, `Sections_roomNumber`, `Sections_startTime`),
+  CONSTRAINT `fk_Sections_Buildings1`
+    FOREIGN KEY (`Buildings_id`)
+    REFERENCES `brno4758`.`Buildings` (`Buildings_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Sections_Courses1`
+    FOREIGN KEY (`Courses_id`)
+    REFERENCES `brno4758`.`Courses` (`Courses_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Staff_Courses1`
+    FOREIGN KEY (`Staff_id`)
+    REFERENCES `brno4758`.`Staff` (`Staff_id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Teaches`   !****REMOVED FROM FINAL SCHEMA****!
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Teaches` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Teaches` (
+  `Staff_Staff_id` INT NOT NULL,
+  `Sections_number` INT NOT NULL,
+  `Courses_id` INT NOT NULL,
+  INDEX `fk_Teaches_Staff1_idx` (`Staff_Staff_id` ASC) VISIBLE,
+  INDEX `fk_Teaches_Sections1_idx` (`Sections_number` ASC, `Courses_id` ASC) VISIBLE,
+  PRIMARY KEY (`Staff_Staff_id`, `Sections_number`, `Courses_id`),
+  CONSTRAINT `fk_Teaches_Staff1`
+    FOREIGN KEY (`Staff_Staff_id`)
+    REFERENCES `brno4758`.`Staff` (`Staff_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Teaches_Sections1`
+    FOREIGN KEY (`Sections_number` , `Courses_id`)
+    REFERENCES `brno4758`.`Sections` (`Sections_number` , `Courses_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Salaries`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Salaries` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Salaries` (
+  `Salaries_salary` INT NOT NULL,
+  `Staff_id` INT NOT NULL,
+  INDEX `fk_Salaries_Staff1_idx` (`Staff_id` ASC) VISIBLE,
+  PRIMARY KEY (`Staff_id`),
+  CONSTRAINT `fk_Salaries_Staff1`
+    FOREIGN KEY (`Staff_id`)
+    REFERENCES `brno4758`.`Staff` (`Staff_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Enrolled` !*****Cannot add FK constraint on Sections.Section_number, its not a PK in sections. Need to set up trigger to make sure section exists before insertion into enrolled******! (DONE)
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Enrolled` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Enrolled` (
+  `Students_id` INT NOT NULL,
+  `Sections_number` INT NOT NULL,
+  `Courses_id` INT NOT NULL,
+  PRIMARY KEY (`Students_id`, `Sections_number`, `Courses_id`),
+  CONSTRAINT `fk_Enrolled_Students1`
+    FOREIGN KEY (`Students_id`)
+    REFERENCES `brno4758`.`Students` (`Students_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Enrolled_Courses1`
+  	FOREIGN KEY (`Courses_id`)
+    REFERENCES `brno4758`.`Courses` (`Courses_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `brno4758`.`Dues` !*****Set trigger so students cannot enroll for new classes if they have a past due bill*****! (DONE)
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `brno4758`.`Dues` ;
+
+CREATE TABLE IF NOT EXISTS `brno4758`.`Dues` (
+  `Dues_amount` INT NOT NULL,
+  `Students_id` INT NOT NULL,
+  `Due_date` DATE NOT NULL,
+  PRIMARY KEY (`Students_id`),
+  CONSTRAINT `fk_Dues_Students`
+    FOREIGN KEY (`Students_id`)
+    REFERENCES `brno4758`.`Students` (`Students_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
